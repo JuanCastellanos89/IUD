@@ -13,7 +13,7 @@ const usuarioSchema = Schema({
     estado: {
         type: String,
         required: true,
-        enum: ['Activo', 'inactivo'],
+        enum: ['Activo', 'Inactivo'],
     },
     fechaCreacion: {
         type: Date,
