@@ -1,10 +1,16 @@
 const { Router } = require('express');
+const { validarUsuario } = require('../helpers/validarUsuario');
 const Usuario = require('../models/Usuario');
 const router = Router();
 
 
 router.post('/', async function (req, res) {
     try {
+        const validaciones = validarUsuario(req);
+        if(validaciones.length > 0){
+            return res.status(400).send(validaciones);
+        }
+
         console.log(req.body);
 
         const existeUsuario = await Usuario.findOne({email: req.body.email});
@@ -39,6 +45,11 @@ router.get('/', async function (req, res) {
 
 router.put('/:usuarioId', async function (req, res) {
     try {
+        const validaciones = validarUsuario(req);
+        if(validaciones.length > 0){
+            return res.status(400).send(validaciones);
+        }
+
         console.log(req.body, req.params);
         
         let usuario = await Usuario.findById(req.params.usuarioId);

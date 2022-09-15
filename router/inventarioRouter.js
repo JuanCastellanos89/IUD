@@ -1,9 +1,15 @@
 const { Router } = require('express');
 const Inventario = require('../models/Inventario');
 const router = Router();
+const { validarInventario } = require('../helpers/validarInventario');
 
 router.post('/', async function(req, res){
     try{
+        const validaciones = validarInventario(req);
+        if(validaciones.length > 0){
+            return res.status(400).send(validaciones);
+        }
+
         const existeInventarioSerial = await Inventario.findOne({ serial: req.body.serial});
         if(existeInventarioSerial){
             return res.status(400).send('Ya existe el serial para otro equipo!!!');
@@ -57,6 +63,11 @@ router.get('/', async function(req, res){
 
 router.put('/:inventarioId', async function(req, res){
     try{
+        const validaciones = validarInventario(req);
+        if(validaciones.length > 0){
+            return res.status(400).send(validaciones);
+        }
+
         let inventario = await Inventario.findById(req.params.inventarioId);
         if(!inventario){
             return res.status(400).send('Inventario no existe!!!');

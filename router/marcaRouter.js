@@ -1,9 +1,15 @@
 const { Router } = require('express');
+const { validarMarca } = require('../helpers/validarMarca');
 const Marca = require('../models/Marca');
 const router = Router();
 
 router.post('/', async function(req, res){
     try{
+        const validaciones = validarMarca(req);
+        if(validaciones.length > 0){
+            return res.status(400).send(validaciones);
+        }
+
         let marca = new Marca();
         marca.nombre = req.body.nombre;
         marca.estado = req. body.estado;
@@ -30,6 +36,11 @@ router.get('/', async function(req, res){
 
 router.put('/:marcaId', async function(req, res){
     try{
+        const validaciones = validarMarca(req);
+        if(validaciones.length > 0){
+            return res.status(400).send(validaciones);
+        }
+
         let marca = await Marca.findById(req.params.marcaId);
 
         if(!marca){
