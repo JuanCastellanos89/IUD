@@ -58,4 +58,18 @@ router.put('/:marcaId', async function(req, res){
     }
     
 });
+
+router.get('/:marcaId', async function(req, res) {
+    try{
+        const marca = await Marca.findById(req.params.marcaId);
+        if(!marca) {
+            return res.status(404).send('Marca no Existe!!!');
+        } 
+        res.send(marca);
+    }catch(error){
+        console.log(error);
+        res.status(500).send('Error algo a fallado en actualizar Marca');
+    }
+});
+
 module.exports = router;

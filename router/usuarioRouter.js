@@ -78,4 +78,17 @@ router.put('/:usuarioId', async function (req, res) {
     }
 });
 
+router.get('/:usuarioId', async function(req, res) {
+    try{
+        const usuario = await Usuario.findById(req.params.usuarioId);
+        if(!usuario) {
+            return res.status(404).send('Usuario no Existe!!!');
+        } 
+        res.send(usuario);
+    }catch(error){
+        console.log(error);
+        res.status(500).send('Error algo a fallado en actualizar Usuario');
+    }
+});
+
 module.exports = router;

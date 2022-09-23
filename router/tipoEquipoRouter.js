@@ -58,4 +58,18 @@ router.put('/:tipoEquipoId', async function(req, res){
         res.send('Error algo a fallado...');
     }    
 });
+
+router.get('/:tipoEquipoId', async function(req, res) {
+    try{
+        const tipoEquipo = await TipoEquipo.findById(req.params.tipoEquipoId);
+        if(!tipoEquipo) {
+            return res.status(404).send('Tipo de Equipo no Existe!!!');
+        } 
+        res.send(tipoEquipo);
+    }catch(error){
+        console.log(error);
+        res.status(500).send('Error algo a fallado en actualizar Tipo de Equipo');
+    }
+});
+
 module.exports = router;

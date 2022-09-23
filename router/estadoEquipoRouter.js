@@ -58,4 +58,18 @@ router.put('/:estadoEquipoId', async function(req, res){
         res.send('Error algo a fallado');
     }
 });
+
+router.get('/:estadoEquipoId', async function(req, res) {
+    try{
+        const estadoEquipo = await EstadoEquipo.findById(req.params.estadoEquipoId);
+        if(!estadoEquipo) {
+            return res.status(404).send('Estado de Equipo no Existe!!!');
+        } 
+        res.send(estadoEquipo);
+    }catch(error){
+        console.log(error);
+        res.status(500).send('Error algo a fallado en actualizar Estado de Equipo');
+    }
+});
+
 module.exports = router;
