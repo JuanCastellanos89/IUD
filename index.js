@@ -5,7 +5,7 @@ require('dotenv').config();
 
 
 
-const port = process.env.PORT;
+const PORT = process.env.PORT || 4000;
 const app = express();
 app.use(cors());
 
@@ -20,6 +20,6 @@ app.use('/marca', require('./router/marcaRouter'))
 app.use('/tipo-Equipo', require('./router/tipoEquipoRouter'))
 app.use('/inventario', require('./router/inventarioRouter'))
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`)
 });
