@@ -2,9 +2,12 @@ const { Router } = require('express');
 const { validarUsuario } = require('../helpers/validarUsuario');
 const Usuario = require('../models/Usuario');
 const router = Router();
+const bcrypt = require('bcryptjs');
+const { validarJWT } = require('../middleware/validarJWT');
+const { validarRolAdmin } = require('../middleware/validar-rol-admin');
 
 
-router.post('/', async function (req, res) {
+router.post('/', [ validarJWT, validarRolAdmin ], async function (req, res) {
     try {
         const validaciones = validarUsuario(req);
         if(validaciones.length > 0){
@@ -21,6 +24,11 @@ router.post('/', async function (req, res) {
         let usuario = new Usuario();
         usuario.nombre = req.body.nombre;
         usuario.email = req.body.email;
+
+        const salt = bcrypt.genSaltSync();
+        const contrasena = bcrypt.hashSync(req.body.contrasena, salt);
+        usuario.contrasena = contrasena;
+        usuario.rol = req.body.rol;
         usuario.estado = req.body.estado;
         usuario.fechaCreacion = new Date();
         usuario.fechaActualizacion = new Date();
@@ -33,7 +41,7 @@ router.post('/', async function (req, res) {
     }
 });
 
-router.get('/', async function (req, res) {
+router.get('/', [ validarJWT, validarRolAdmin ], async function (req, res) {
     try{
         let usuarios = await Usuario.find();
         res.send(usuarios);
@@ -43,7 +51,7 @@ router.get('/', async function (req, res) {
     }
 });
 
-router.put('/:usuarioId', async function (req, res) {
+router.put('/:usuarioId', [ validarJWT, validarRolAdmin ], async function (req, res) {
     try {
         const validaciones = validarUsuario(req);
         if(validaciones.length > 0){
@@ -67,6 +75,8 @@ router.put('/:usuarioId', async function (req, res) {
 
         usuario.email = req.body.email;
         usuario.nombre = req.body.nombre;
+        usuario.contrasena = contrasena;
+        usuario.rol = req.body.rol;
         usuario.estado = req.body.estado;
         usuario.fechaActualizacion = new Date();
         usuario = await usuario.save();
@@ -78,7 +88,7 @@ router.put('/:usuarioId', async function (req, res) {
     }
 });
 
-router.get('/:usuarioId', async function(req, res) {
+router.get('/:usuarioId', [ validarJWT, validarRolAdmin ], async function(req, res) {
     try{
         const usuario = await Usuario.findById(req.params.usuarioId);
         if(!usuario) {

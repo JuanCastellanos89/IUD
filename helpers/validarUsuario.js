@@ -8,6 +8,12 @@ const validarUsuario = (req) =>{
         validaciones.push('E-mail es requerido!!!');
     }
 
+    if(!req.body.contrasena){
+        validaciones.push('Contraseña es requerido!!!');
+    }
+    if(!req.body.rol){
+        validaciones.push('Rol es requerido!!!');
+    }
     if(!req.body.estado){
         validaciones.push('Estado es requerido!!!');
     }

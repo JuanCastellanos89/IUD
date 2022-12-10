@@ -2,8 +2,10 @@ const { Router } = require('express');
 const { validarMarca } = require('../helpers/validarMarca');
 const Marca = require('../models/Marca');
 const router = Router();
+const { validarJWT } = require('../middleware/validarJWT');
+const { validarRolAdmin } = require('../middleware/validar-rol-admin');
 
-router.post('/', async function(req, res){
+router.post('/', [ validarJWT, validarRolAdmin ], async function(req, res){
     try{
         const validaciones = validarMarca(req);
         if(validaciones.length > 0){
@@ -23,7 +25,7 @@ router.post('/', async function(req, res){
     }
 });
 
-router.get('/', async function(req, res){
+router.get('/', [ validarJWT, validarRolAdmin ], async function(req, res){
     try{
         let marcas = await Marca.find();
         res.send(marcas);
@@ -34,7 +36,7 @@ router.get('/', async function(req, res){
     }
 });
 
-router.put('/:marcaId', async function(req, res){
+router.put('/:marcaId', [ validarJWT, validarRolAdmin ], async function(req, res){
     try{
         const validaciones = validarMarca(req);
         if(validaciones.length > 0){
@@ -59,7 +61,7 @@ router.put('/:marcaId', async function(req, res){
     
 });
 
-router.get('/:marcaId', async function(req, res) {
+router.get('/:marcaId', [ validarJWT, validarRolAdmin ], async function(req, res) {
     try{
         const marca = await Marca.findById(req.params.marcaId);
         if(!marca) {

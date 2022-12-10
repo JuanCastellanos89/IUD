@@ -2,8 +2,10 @@ const { Router } = require('express');
 const { validarEstadoEquipo } = require('../helpers/validarEstadoEquipo');
 const EstadoEquipo = require('../models/EstadoEquipo');
 const router = Router();
+const { validarJWT } = require('../middleware/validarJWT');
+const { validarRolAdmin } = require('../middleware/validar-rol-admin');
 
-router.post('/', async function(req, res){
+router.post('/', [ validarJWT, validarRolAdmin ], async function(req, res){
     try{
         const validaciones = validarEstadoEquipo(req);
         if(validaciones.length > 0){
@@ -24,7 +26,7 @@ router.post('/', async function(req, res){
     }
 });
 
-router.get('/', async function(req, res){
+router.get('/', [ validarJWT, validarRolAdmin ], async function(req, res){
     try{
         let estadoEquipos = await EstadoEquipo.find();
         res.send(estadoEquipos);
@@ -35,7 +37,7 @@ router.get('/', async function(req, res){
     }
 });
 
-router.put('/:estadoEquipoId', async function(req, res){
+router.put('/:estadoEquipoId', [ validarJWT, validarRolAdmin ], async function(req, res){
     try{
         const validaciones = validarEstadoEquipo(req);
         if(validaciones.length > 0){
@@ -59,7 +61,7 @@ router.put('/:estadoEquipoId', async function(req, res){
     }
 });
 
-router.get('/:estadoEquipoId', async function(req, res) {
+router.get('/:estadoEquipoId', [ validarJWT, validarRolAdmin ], async function(req, res) {
     try{
         const estadoEquipo = await EstadoEquipo.findById(req.params.estadoEquipoId);
         if(!estadoEquipo) {

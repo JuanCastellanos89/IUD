@@ -10,6 +10,15 @@ const usuarioSchema = Schema({
         required: true,
         unique: true,
     },
+    contrasena: {
+        type: String,
+        required: true,
+    },
+    rol: {
+        type: String,
+        required: true,
+        enum: ['ADMIN', 'DOCENTE'],
+    },
     estado: {
         type: String,
         required: true,
